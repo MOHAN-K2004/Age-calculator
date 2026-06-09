@@ -1,100 +1,172 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stopwatch Timer</title>
+    <title>Calendar + Age Calculator</title>
     <style>
         body {
             font-family: Arial;
             text-align: center;
-            background: #222;
-            color: white;
+            background: #f4f4f4;
         }
 
         .container {
-            margin-top: 100px;
+            width: 350px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
         }
 
-        h1 {
-            font-size: 40px;
-            margin-bottom: 20px;
-        }
-
-        #display {
-            font-size: 50px;
-            margin-bottom: 20px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
+            padding: 5px 10px;
             cursor: pointer;
+        }
+
+        .days, .dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-top: 10px;
+        }
+
+        .days div {
+            font-weight: bold;
+        }
+
+        .dates div {
+            padding: 10px;
+            margin: 3px;
+            background: #eee;
             border-radius: 5px;
         }
 
-        .start { background: green; color: white; }
-        .stop { background: red; color: white; }
-        .reset { background: gray; color: white; }
+        .today {
+            background: #4CAF50 !important;
+            color: white;
+        }
+
+        input {
+            margin-top: 10px;
+            padding: 8px;
+            width: 80%;
+        }
+
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>⏱️ Stopwatch</h1>
-    <div id="display">00:00:00</div>
+    <h2> Calendar</h2>
 
-    <button class="start" onclick="start()">Start</button>
-    <button class="stop" onclick="stop()">Stop</button>
-    <button class="reset" onclick="reset()">Reset</button>
+    <div class="header">
+        <button onclick="prevMonth()">Previous</button>
+        <h3 id="monthYear"></h3>
+        <button onclick="nextMonth()">Next</button>
+    </div>
+
+    <div class="days">
+        <div>Sun</div><div>Mon</div><div>Tue</div>
+        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+
+    <div class="dates" id="dates"></div>
+
+    <!-- Age Calculator -->
+    <h2> Age Calculator</h2>
+    <input type="date" id="dob">
+    <button onclick="calculateAge()">Calculate Age</button>
+
+    <div class="result" id="ageResult"></div>
 </div>
 
 <script>
-let seconds = 0;
-let minutes = 0;
-let hours = 0;
-let timer = null;
+let date = new Date();
 
-function updateDisplay() {
-    let h = hours < 10 ? "0" + hours : hours;
-    let m = minutes < 10 ? "0" + minutes : minutes;
-    let s = seconds < 10 ? "0" + seconds : seconds;
+function renderCalendar() {
+    let year = date.getFullYear();
+    let month = date.getMonth();
 
-    document.getElementById("display").innerText = h + ":" + m + ":" + s;
-}
+    document.getElementById("monthYear").innerText =
+        date.toLocaleString("default", { month: "long" }) + " " + year;
 
-function start() {
-    if (timer !== null) return;
+    let firstDay = new Date(year, month, 1).getDay();
+    let lastDate = new Date(year, month + 1, 0).getDate();
 
-    timer = setInterval(() => {
-        seconds++;
+    let datesContainer = document.getElementById("dates");
+    datesContainer.innerHTML = "";
 
-        if (seconds === 60) {
-            seconds = 0;
-            minutes++;
+    for (let i = 0; i < firstDay; i++) {
+        datesContainer.innerHTML += "<div></div>";
+    }
+
+    for (let i = 1; i <= lastDate; i++) {
+        let div = document.createElement("div");
+        div.innerText = i;
+
+        let today = new Date();
+        if (
+            i === today.getDate() &&
+            month === today.getMonth() &&
+            year === today.getFullYear()
+        ) {
+            div.classList.add("today");
         }
 
-        if (minutes === 60) {
-            minutes = 0;
-            hours++;
-        }
-
-        updateDisplay();
-    }, 1000);
+        datesContainer.appendChild(div);
+    }
 }
 
-function stop() {
-    clearInterval(timer);
-    timer = null;
+function prevMonth() {
+    date.setMonth(date.getMonth() - 1);
+    renderCalendar();
 }
 
-function reset() {
-    stop();
-    seconds = 0;
-    minutes = 0;
-    hours = 0;
-    updateDisplay();
+function nextMonth() {
+    date.setMonth(date.getMonth() + 1);
+    renderCalendar();
 }
+
+// Age Calculator
+function calculateAge() {
+    let dob = document.getElementById("dob").value;
+
+    if (!dob) {
+        alert("Please select your date of birth");
+        return;
+    }
+
+    let birthDate = new Date(dob);
+    let today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let monthDiff = today.getMonth() - birthDate.getMonth();
+    let dayDiff = today.getDate() - birthDate.getDate();
+
+    if (dayDiff < 0) {
+        monthDiff--;
+        dayDiff += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+    }
+
+    if (monthDiff < 0) {
+        age--;
+        monthDiff += 12;
+    }
+
+    document.getElementById("ageResult").innerText =
+        `Age: ${age} years, ${monthDiff} months, ${dayDiff} days`;
+}
+
+renderCalendar();
 </script>
 
 </body>

@@ -1,12 +1,7 @@
-FROM nginx:latest
-
-RUN rm -rf /usr/share/nginx/html/*
-
-COPY index.html /usr/share/nginx/html/
-
-# Configure nginx to run on port 8080
-RUN sed -i 's/80/8080/g' /etc/nginx/conf.d/default.conf
-
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
 EXPOSE 8080
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server.js"]
