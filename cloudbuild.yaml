@@ -20,7 +20,6 @@ images:
 options:
   logging: CLOUD_LOGGING_ONLY
 
-# Create new instance template with new image
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args:
   - compute
@@ -33,7 +32,7 @@ options:
   - --metadata=startup-script=#! /bin/bash
     docker run -d -p 80:80 us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA
 
-# Update MIG
+
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args:
   - compute
