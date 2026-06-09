@@ -1,14 +1,19 @@
-FROM node:18-alpine
+FROM nginx:alpine
 
 WORKDIR /app
 
-# Copy package.json first (best practice for caching)
+# If you have package.json
 COPY package*.json ./
-
 RUN npm install
 
 # Copy the rest of the app
-COPY . .
+COPY . /usr/share/nginx/html
 
 EXPOSE 80
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
+
+
+# Copy static files into Nginx’s default directory
+
+
+
