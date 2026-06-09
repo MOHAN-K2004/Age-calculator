@@ -1,87 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>To-Do App</title>
-    <h1>Updated Version 🚀</h1>
+    <title>Stopwatch Timer</title>
     <style>
         body {
             font-family: Arial;
             text-align: center;
-            background: #f4f4f4;
+            background: #222;
+            color: white;
         }
 
         .container {
-            margin: auto;
-            width: 300px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+            margin-top: 100px;
         }
 
-        input {
-            width: 70%;
-            padding: 8px;
+        h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        #display {
+            font-size: 50px;
+            margin-bottom: 20px;
         }
 
         button {
-            padding: 8px 10px;
-            background: green;
-            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            padding: 8px;
-            margin-top: 5px;
-            background: #ddd;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .delete {
-            background: red;
-        }
+        .start { background: green; color: white; }
+        .stop { background: red; color: white; }
+        .reset { background: gray; color: white; }
     </style>
 </head>
 <body>
 
-<h2>📝 My To-Do List</h2>
-
 <div class="container">
-    <input type="text" id="taskInput" placeholder="Enter task...">
-    <button onclick="addTask()">Add</button>
+    <h1>⏱️ Stopwatch</h1>
+    <div id="display">00:00:00</div>
 
-    <ul id="taskList"></ul>
+    <button class="start" onclick="start()">Start</button>
+    <button class="stop" onclick="stop()">Stop</button>
+    <button class="reset" onclick="reset()">Reset</button>
 </div>
 
 <script>
-function addTask() {
-    let input = document.getElementById("taskInput");
-    let task = input.value;
+let seconds = 0;
+let minutes = 0;
+let hours = 0;
+let timer = null;
 
-    if (task === "") return;
+function updateDisplay() {
+    let h = hours < 10 ? "0" + hours : hours;
+    let m = minutes < 10 ? "0" + minutes : minutes;
+    let s = seconds < 10 ? "0" + seconds : seconds;
 
-    let li = document.createElement("li");
-    li.textContent = task;
+    document.getElementById("display").innerText = h + ":" + m + ":" + s;
+}
 
-    let btn = document.createElement("button");
-    btn.textContent = "X";
-    btn.className = "delete";
-    btn.onclick = function () {
-        li.remove();
-    };
+function start() {
+    if (timer !== null) return;
 
-    li.appendChild(btn);
+    timer = setInterval(() => {
+        seconds++;
 
-    document.getElementById("taskList").appendChild(li);
+        if (seconds === 60) {
+            seconds = 0;
+            minutes++;
+        }
 
-    input.value = "";
+        if (minutes === 60) {
+            minutes = 0;
+            hours++;
+        }
+
+        updateDisplay();
+    }, 1000);
+}
+
+function stop() {
+    clearInterval(timer);
+    timer = null;
+}
+
+function reset() {
+    stop();
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    updateDisplay();
 }
 </script>
 
