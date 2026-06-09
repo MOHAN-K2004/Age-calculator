@@ -33,24 +33,3 @@ options:
     docker run -d -p 80:80 us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA
 
 
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args:
-  - compute
-  - instance-groups
-  - managed
-  - set-instance-template
-  - app-mig
-  - --template=app-template-$SHORT_SHA
-  - --zone=us-central1-a
-
-# Rolling update (zero downtime)
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args:
-  - compute
-  - instance-groups
-  - managed
-  - rolling-action
-  - start-update
-  - app-mig
-  - --zone=us-central1-a
-  - --max-unavailable=0
