@@ -5,7 +5,7 @@ steps:
       'build', 
       '-t', 'us-central1-docker.pkg.dev/mohankrishnan-2489484/my-docker-repo/my-app:$SHORT_SHA', 
       '-t', 'us-central1-docker.pkg.dev/mohankrishnan-2489484/my-docker-repo/my-app:latest', 
-      '.'
+      './frontend' # Change this to your folder path if applicable
     ]
 
   # 2. Push the unique image to Artifact Registry

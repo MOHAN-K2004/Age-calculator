@@ -1,7 +1,7 @@
-FROM node:18-alpine
+FROM nginx:alpine
 WORKDIR /app
-COPY package*.json ./
+COPY . /usr/share/nginx/html
 RUN npm install
 COPY . .
-EXPOSE 8080
+EXPOSE 80
 CMD ["node", "server.js"]
