@@ -46,3 +46,7 @@ steps:
 
 images:
   - 'us-central1-docker.pkg.dev/mohankrishnan-2489484/my-docker-repo/my-app:latest'
+
+# ADD THIS SECTIONS TO FIX THE LOGGING ERROR:
+options:
+  logging: CLOUD_LOGGING_ONLY
