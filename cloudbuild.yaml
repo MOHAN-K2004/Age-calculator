@@ -20,16 +20,3 @@ images:
 options:
   logging: CLOUD_LOGGING_ONLY
 
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args:
-  - compute
-  - instance-templates
-  - create
-  - app-template-$SHORT_SHA
-  - --machine-type=e2-medium
-  - --image-family=cos-stable
-  - --image-project=cos-cloud
-  - --metadata=startup-script=#! /bin/bash
-    docker run -d -p 80:80 us-central1-docker.pkg.dev/$PROJECT_ID/my-repo/my-app:$SHORT_SHA
-
-
